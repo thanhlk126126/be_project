@@ -13,7 +13,7 @@ class ProductController
         // include_once ROOT_DIR . '/src/views/trangchu.php';
         
     }
-//đã xong tiềm kiếm
+        //đã xong tìm kiếm
     public static function SearchController()
     {
         $productModels = new ProductModel();
@@ -46,6 +46,7 @@ class ProductController
            // include ROOT_DIR . '/src/views/user/danh-muc.php';
        // include_once ROOT_DIR . '/src/views/tim-kiem.php';
     }
+
     public static function ProductInfoController()
     {
         /**
@@ -57,8 +58,9 @@ class ProductController
             /**
              * Tách chuỗi tên-id thành 2 biến name và id
              */
-            $name =$_GET["name"];
-            $id = $_GET["id"];
+            $name ="iphone X";
+            $id = 1;
+           
 
             /**
              * Kiểm tra cookie đã lưu lần cập lượt xem của sản phẩm này chưa
@@ -66,32 +68,71 @@ class ProductController
              */
             if (empty($_COOKIE[URL[0]])) {
                 setcookie(URL[0], true, time() + 86400);
-                $productInfo->updateViewProduct($id, $name);
+                 $productInfo->updateViewProduct($id, $name);
             }
-
+            var_dump($productInfo);
             /**
              * Lấy thông tin sản phẩm
              * Nếu sản phẩm không tồn tại => hiển thị trang 404
              * Nếu sản phẩm tồn tại => cắt chuỗi product_image thành mảng hình ảnh để hiển thị, tính giá tiền sản phẩm sau khi giảm giá => hiển thị giao diện trang thông tin sản phẩm
              */
-            $product = $productModel->getProductInfo($id, $name);
+            $product = $productInfo->getProductInfo($id, $name);
             if (empty($product)) {
                 include ROOT_DIR . '/src/views/admin/404.php';
             } else {
-                $product_image = explode(",", $product['p_image']);
+                $product_image = $product['p_image'];
                 $price = $product['p_price'] * (100 - $product['sale']) / 100;
-                include ROOT_DIR . '/src/views/user/san-pham.php';
+              //  include ROOT_DIR . '/src/views/user/san-pham.php';
             }
             var_dump($product);
             
         }
-         else {
-            //include ROOT_DIR . '/src/views/admin/404.php';
-        }
-        var_dump($productInfo);
+        // else {
+        //     //include ROOT_DIR . '/src/views/admin/404.php';
+        // }
+       
+         
        
     }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static function AboutUs()
     {
         include_once ROOT_DIR . '/src/views/about-us.php';
