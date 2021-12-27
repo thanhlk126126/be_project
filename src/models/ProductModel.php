@@ -93,19 +93,37 @@ class ProductModel extends Db
         $result = parent::select($sql);
         return count($result) != 0 ? parent::select($sql)[0] : null;
     }
-
-
-    // lấy số lượng sản phẩm theo category
-    public function getProductsBYID($id, $name, $start)
+    /*
+    *thêm sản phẩm
+    tên -giá-hình ảnh-chi tiết-trạng thái-lần cuối thay đổi-giảm giá
+    */
+    public function ProductsAdd($productName ,$productPrice, $productImage , $productDescription,$status ,$lastupdate ,$sale )
     {
-        $name=str_replace(' ', '%', $name);
-        $name = "%" . $name . "%";
-        $sql = parent::$conection->prepare("SELECT `product` .* FROM `product` JOIN `product_category` ON `product_category`.`productID` = `product`.`p_id` JOIN `categories` 
-        ON `product_category`.`category_ID` = `categories`.`c_id` 
-        WHERE `product`.`status` = 1 AND `product_category`.`category_ID` =? 
-        AND `categories`.`c_name` LIKE ? ORDER BY `product`.`p_id` DESC LIMIT ?, 12");
-        $sql->bind_param("isi", $id, $name, $start);
-        return parent::select($sql); // xuất kết quả
+        //2. Viết câu SQL
+        $sql = parent::$connection->prepare("INSERT INTO `product`(`p_name`, `p_price`, `p_image`, `p_description`, `status`, `lastupdate`, `sale`) VALUES (?,?,?,?,?,?,?)");
+        $sql->bind_param('sissiii',$productName ,$productPrice, $productImage , $productDescription,$status ,$lastupdate ,$sale );
+        return $sql->execute();
     }
+    /*
+    xóa sản phẩm phẩm theo id
+    
+    */
+      public function deleteProduct($id)
+    {
+        //2. Viết câu SQL
+        $sql = parent::$connection->prepare("DELETE FROM `product` WHERE p_id = ?");
+        $sql->bind_param('i',$id);
+        return $sql->execute();
+    }
+    /*
+    sửa sản phẩm
+     */
+    public function UpdateProduct($productName ,$productPrice, $productImage , $productDescription,$status ,$lastupdate ,$sale ,$id){
+        $sql = parent::$connection->prepare("UPDATE `product` SET  `p_name`= ? ,`p_price`= ? , `p_image`= ? , `p_description`= ?,`status`= ? ,`lastupdate`= ?,`sale`= ?, WHERE `p_id`= ?");
+        $sql-> bind_param('sissiiii',$productName ,$productPrice, $productImage , $productDescription,$status ,$lastupdate ,$sale ,$id);
+        return $sql-> execute();
+        
+    }
+    
 
 }
