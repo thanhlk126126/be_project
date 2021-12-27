@@ -3,7 +3,7 @@ class CategoryModel extends Db{
    // lấy ra tất cả danh mục
     public function getCategories()
     {
-        $sql = parent::$conection->prepare("SELECT * FROM `categories` WHERE `c_id` = ?");
+        $sql = parent::$conection->prepare("SELECT * FROM `categories` where `status` = 1");
         return parent::select($sql);
     }
     

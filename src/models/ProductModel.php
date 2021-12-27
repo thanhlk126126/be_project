@@ -21,14 +21,7 @@ class ProductModel extends Db
     
 
     
-    // public function getProductsSearch()
-    // {
-        
-    //     $sql = parent::$conection->prepare("SELECT * FROM product WHERE p_name LIKE '?' ORDER BY p_price ASC, p_id ASC LIMIT 0, 12");
-    //     return parent::select($sql); 
-    // }
 
-   
     
     // lấy sản phẩm theo từ khóa search (12sp) từ cao đến thấp. => có phân trang
     public function searchProducts($search,$page)
@@ -41,6 +34,7 @@ class ProductModel extends Db
         
         return parent::select($sql);
     }
+    //đếm số lượng sản phẩm sau tìm kiếm để phân trang
     public function CountsearchProducts($search)
     {
         $search=str_replace(' ', '%', $search);
@@ -71,12 +65,12 @@ class ProductModel extends Db
     /**
      * Cập nhật lượt truy cập của sản phẩm
      */
-    public function updateViewProduct($id, $name)
+    public function updateViewProduct($id)
     {
-        $name=str_replace(' ', '%', $name);
-        $name = "%" . $name . "%";
-        $sql = parent::$conection->prepare("UPDATE `product` SET `view` = `view`+1 WHERE `p_id` = ? AND `p_name` LIKE ?");
-        $sql->bind_param("is", $id, $name);
+        //$name=str_replace(' ', '%', $name);
+       // $name = "%" . $name . "%";
+        $sql = parent::$conection->prepare("UPDATE `product` SET `view` = `view`+1 WHERE `p_id` = ? ");
+        $sql->bind_param("i", $id);
         return $sql->execute();
     }
 
@@ -84,15 +78,15 @@ class ProductModel extends Db
      * Lấy thông tin của sản phẩm
      * Nếu sản phẩm không tồn tại trả về null
      */
-    public function getProductInfo($id, $name)
+    public function getProductInfo($id)
     {
-        $name=str_replace(' ', '%', $name);
-        $name = "%" . $name . "%";
-        $sql = parent::$conection->prepare("SELECT * FROM `product` WHERE `p_id` = ? AND `p_name` LIKE ? AND `status` = 1");
-        $sql->bind_param("is", $id, $name);
+        
+        $sql = parent::$conection->prepare("SELECT * FROM `product` WHERE `p_id` = ? AND `status` = 1");
+        $sql->bind_param("i", $id);
         $result = parent::select($sql);
         return count($result) != 0 ? parent::select($sql)[0] : null;
     }
+    
     /*
     *thêm sản phẩm
     tên -giá-hình ảnh-chi tiết-trạng thái-lần cuối thay đổi-giảm giá
