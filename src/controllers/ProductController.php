@@ -55,30 +55,29 @@ class ProductController
          */
         $productInfo = new ProductModel();
         if (count(URL) > 1) {
-            /**
-             * Tách chuỗi tên-id thành 2 biến name và id
-             */
-            $name ="iphone X";
-            $id = 1;
            
+            // $name ="iphone X";
+            $id = 1;
+            $product_info = $productInfo->getProductInfo($id);
+            
 
             /**
              * Kiểm tra cookie đã lưu lần cập lượt xem của sản phẩm này chưa
              * Nếu chưa => lưu cookie => cập nhật lượt xem 
              */
-            if (empty($_COOKIE[URL[0]])) {
-                setcookie(URL[0], true, time() + 86400);
-                 $productInfo->updateViewProduct($id, $name);
+            if (empty($_COOKIE[URL[1]])) {
+                setcookie(URL[1], true, time() + 86400);
+                 $productInfo->updateViewProduct($id);
             }
-            var_dump($productInfo);
+          
             /**
              * Lấy thông tin sản phẩm
              * Nếu sản phẩm không tồn tại => hiển thị trang 404
              * Nếu sản phẩm tồn tại => cắt chuỗi product_image thành mảng hình ảnh để hiển thị, tính giá tiền sản phẩm sau khi giảm giá => hiển thị giao diện trang thông tin sản phẩm
              */
-            $product = $productInfo->getProductInfo($id, $name);
+            $product = $productInfo->getProductInfo($id);
             if (empty($product)) {
-                include ROOT_DIR . '/src/views/admin/404.php';
+               // include ROOT_DIR . '/src/views/admin/404.php';
             } else {
                 $product_image = $product['p_image'];
                 $price = $product['p_price'] * (100 - $product['sale']) / 100;
